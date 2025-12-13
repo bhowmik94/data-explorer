@@ -23,7 +23,44 @@ function App() {
       return { valid: false, message: "JSON must contain objects" };
     }
 
-    return { valid: true, message: "JSON file is alright" };
+    return { valid: true, message: "JSON file is valid" };
+  };
+  
+  // Retrieve all unique keys from parsed data
+  const extractSchema = function (data: Record<string, unknown>[]): string[] {
+    const keys = new Set<string>();
+
+    data.forEach((row) => {
+      Object.keys(row).forEach((key) => keys.add(key));
+    });
+
+    return Array.from(keys);
+  };
+
+  // Normalize each data row against the schema
+  const normalizeData = function (
+    data: Record<string, unknown>[],
+    columns: string[]
+  ): Record<string, unknown>[] {
+    return data.map((row) => {
+      const normalizedRow: Record<string, unknown> = {};
+
+      columns.forEach((col) => {
+        normalizedRow[col] = row[col] ?? "";
+      });
+
+      return normalizedRow;
+    });
+  };
+
+  // Check for inconsistent rows in data
+  const hasInconsistentSchema = function (
+    data: Record<string, unknown>[],
+    columns: string[]
+  ): boolean {
+    return data.some((row) => {
+      return Object.keys(row).length !== columns.length;
+    });
   };
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,12 +72,20 @@ function App() {
         const parsedJSON = JSON.parse(reader.result as string);
         const { valid, message } = validateJSON(parsedJSON);
 
+        const schema = extractSchema(parsedJSON);
+        const normalizedData = normalizeData(parsedJSON, schema);
+        const isInconsistent = hasInconsistentSchema(parsedJSON, schema);
+
+        if (isInconsistent) {
+            alert('Some rows had missing or extra fields. Data was normalized.');
+        }
+
         if (!valid) {
           alert(message);
           return;
         }
 
-        setTableData(parsedJSON);
+        setTableData(normalizedData);
       } catch (error) {}
     };
 
