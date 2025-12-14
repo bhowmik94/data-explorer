@@ -1,11 +1,17 @@
 import { useState, type ChangeEvent } from "react";
 import "./App.css";
+import {
+  extractSchema,
+  normalizeData,
+  hasInconsistentSchema,
+  type NormalizedRow,
+} from "./utls/dataUtils";
 
 function App() {
-  const [tableData, setTableData] = useState<Record<string, unknown>[]>([]);
+  const [tableData, setTableData] = useState<NormalizedRow[]>([]);
 
   // Derived columns array from the uploaded JSON table data
-  const columns = tableData.length > 0 ? Object.keys(tableData[0]) : [];
+  const columns = tableData.length > 0 ? Object.keys(tableData[0].data) : [];
 
   const validateJSON = function (json: any): {
     valid: boolean;
@@ -25,43 +31,6 @@ function App() {
 
     return { valid: true, message: "JSON file is valid" };
   };
-  
-  // Retrieve all unique keys from parsed data
-  const extractSchema = function (data: Record<string, unknown>[]): string[] {
-    const keys = new Set<string>();
-
-    data.forEach((row) => {
-      Object.keys(row).forEach((key) => keys.add(key));
-    });
-
-    return Array.from(keys);
-  };
-
-  // Normalize each data row against the schema
-  const normalizeData = function (
-    data: Record<string, unknown>[],
-    columns: string[]
-  ): Record<string, unknown>[] {
-    return data.map((row) => {
-      const normalizedRow: Record<string, unknown> = {};
-
-      columns.forEach((col) => {
-        normalizedRow[col] = row[col] ?? "";
-      });
-
-      return normalizedRow;
-    });
-  };
-
-  // Check for inconsistent rows in data
-  const hasInconsistentSchema = function (
-    data: Record<string, unknown>[],
-    columns: string[]
-  ): boolean {
-    return data.some((row) => {
-      return Object.keys(row).length !== columns.length;
-    });
-  };
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,20 +41,20 @@ function App() {
         const parsedJSON = JSON.parse(reader.result as string);
         const { valid, message } = validateJSON(parsedJSON);
 
-        const schema = extractSchema(parsedJSON);
-        const normalizedData = normalizeData(parsedJSON, schema);
-        const isInconsistent = hasInconsistentSchema(parsedJSON, schema);
+        const { coreSchema, extraSchema } = extractSchema(parsedJSON);
+        const normalizedData = normalizeData(parsedJSON, coreSchema);
+        const isInconsistent = hasInconsistentSchema(parsedJSON, coreSchema);
 
         if (isInconsistent) {
-            alert('Some rows had missing or extra fields. Data was normalized.');
+          alert("Some rows had missing or extra fields. Data was normalized.");
         }
 
         if (!valid) {
           alert(message);
           return;
         }
-
         setTableData(normalizedData);
+        console.log(normalizedData);
       } catch (error) {}
     };
 
@@ -107,7 +76,7 @@ function App() {
           {tableData.map((row, idx) => (
             <tr key={idx}>
               {columns.map((col) => (
-                <td key={col}>{String(row[col])}</td>
+                <td className={row.missingCols.has(col) ? 'empty-cell' : ''} key={col}>{String(row.data[col])}</td>
               ))}
             </tr>
           ))}
