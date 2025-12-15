@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from "react";
 import "./App.css";
+import Table from "react-bootstrap/Table";
 import {
   extractSchema,
   normalizeData,
@@ -64,7 +65,7 @@ function App() {
   return (
     <>
       <input type="file" onChange={onFileChange} />
-      <table className="table">
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             {columns.map((col) => (
@@ -74,14 +75,22 @@ function App() {
         </thead>
         <tbody>
           {tableData.map((row, idx) => (
-            <tr key={idx}>
+            <tr
+              key={idx}
+              className={row.missingCols.size > 0 ? "table-warning" : ""}
+            >
               {columns.map((col) => (
-                <td className={row.missingCols.has(col) ? 'empty-cell' : ''} key={col}>{String(row.data[col])}</td>
+                <td
+                  key={col}
+                  className={row.missingCols.has(col) ? "empty-cell" : ""}
+                >
+                  {String(row.data[col])}
+                </td>
               ))}
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </>
   );
 }
