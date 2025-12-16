@@ -55,7 +55,6 @@ function App() {
           return;
         }
         setTableData(normalizedData);
-        console.log(normalizedData);
       } catch (error) {}
     };
 
@@ -65,9 +64,10 @@ function App() {
   return (
     <>
       <input type="file" onChange={onFileChange} />
-      <Table striped bordered hover responsive>
+      <Table bordered responsive>
         <thead>
           <tr>
+            <th>#</th>
             {columns.map((col) => (
               <th key={col}>{col}</th>
             ))}
@@ -79,6 +79,7 @@ function App() {
               key={idx}
               className={row.missingCols.size > 0 ? "table-warning" : ""}
             >
+              <td>{idx + 1}</td>
               {columns.map((col) => (
                 <td
                   key={col}
