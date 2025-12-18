@@ -1,12 +1,4 @@
-interface SchemaResult {
-  coreSchema: string[];
-  extraSchema: string[];
-}
-
-export interface NormalizedRow {
-  data: Record<string, unknown>;
-  missingCols: Set<string>;
-}
+import type { SchemaResult, NormalizedRow } from "../dtos/utils";
 
 // Retrieve core and extra keys from parsed data
 export const extractSchema = function (
