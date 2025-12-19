@@ -14,7 +14,6 @@ function App() {
   const [tableData, setTableData] = useState<NormalizedRow[]>([]);
   const [sortColumn, setSortColumn] = useState<tableSort["column"]>(null);
   const [sortDirection, setSortDirection] = useState<tableSort["order"]>("asc");
-
   // Derived columns array from the uploaded JSON table data
   const columns = tableData.length > 0 ? Object.keys(tableData[0].data) : [];
 
@@ -65,14 +64,9 @@ function App() {
     reader.readAsText(file);
   };
 
-  const handleSort = function (column: string) {
-    let nextDirection: "asc" | "desc" = "asc";
-    if (sortColumn === column) {
-      nextDirection = sortDirection === "asc" ? "desc" : "asc";
-    }
-
+  const handleSort = function (column: string, direction: "asc" | "desc") {
     setSortColumn(column);
-    setSortDirection(nextDirection);
+    setSortDirection(direction);
 
     const sorted = [...tableData].sort((a, b) => {
       const aMissing = a.missingCols.has(column);
@@ -86,7 +80,7 @@ function App() {
       const bValue = b.data[column];
 
       // Determine direction multiplier: 1 for asc, -1 for desc
-      const modifier = nextDirection === "asc" ? 1 : -1;
+      const modifier = direction === "asc" ? 1 : -1;
 
       let result = 0;
       if (typeof aValue === "number" && typeof bValue === "number") {
@@ -111,16 +105,32 @@ function App() {
             {tableData.length != 0 && <th>#</th>}
             {columns.map((col) => (
               <th key={col}>
-                {col}{" "}
-                <span>
-                  <button onClick={(e) => handleSort(col)}>
-                    {sortColumn === col && sortDirection == "asc" ? (
+                <div className="th-content">
+                  <span>{col} </span>
+                  <div className="sort-icons">
+                    <span
+                      onClick={() => handleSort(col, "asc")}
+                      className={
+                        sortColumn === col && sortDirection === "asc"
+                          ? "sort-icon active"
+                          : "sort-icon"
+                      }
+                    >
                       <FaCaretUp />
-                    ) : (
+                    </span>
+
+                    <span
+                      onClick={() => handleSort(col, "desc")}
+                      className={
+                        sortColumn === col && sortDirection === "desc"
+                          ? "sort-icon active"
+                          : "sort-icon"
+                      }
+                    >
                       <FaCaretDown />
-                    )}
-                  </button>
-                </span>
+                    </span>
+                  </div>
+                </div>
               </th>
             ))}
           </tr>

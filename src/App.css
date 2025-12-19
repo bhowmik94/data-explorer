@@ -5,7 +5,26 @@
   text-align: center;
 }
 
-/* .empty-cell {
-  background-color: rgba(255, 193, 7, 0.15) !important;
-  color: #6c757d !important;
-} */
+.th-content {
+  display: inline-flex;
+  place-items: center;
+  gap: 6px;
+}
+
+.sort-icons {
+  display: flex;
+  flex-direction: column;
+}
+
+.sort-icon {
+  opacity: 0.3;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.sort-icon.active {
+  opacity: 1;
+}
