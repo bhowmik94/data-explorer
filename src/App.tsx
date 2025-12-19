@@ -27,6 +27,10 @@ function App() {
     }
 
     setTableData(normalizedData);
+
+    // Going back to initial state
+    setSortColumn(null);
+    setSortDirection("asc");
   };
 
   const handleSort = function (column: string, direction: SortOrder) {
