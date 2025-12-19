@@ -1,14 +1,14 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import "./App.css";
-import Table from "react-bootstrap/Table";
 import {
   extractSchema,
   normalizeData,
   hasInconsistentSchema,
-} from "./utls/dataUtils";
+} from "./utils/dataUtils";
 import type { NormalizedRow } from "./dtos/utils";
-import type { tableSort } from "./dtos/dashboard";
-import { FaCaretUp, FaCaretDown } from "react-icons/fa6";
+import type { tableSort, SortOrder } from "./dtos/dashboard";
+import FileUpload from "./components/FileUpload";
+import DataTable from "./components/DataTable";
 
 function App() {
   const [tableData, setTableData] = useState<NormalizedRow[]>([]);
@@ -17,54 +17,19 @@ function App() {
   // Derived columns array from the uploaded JSON table data
   const columns = tableData.length > 0 ? Object.keys(tableData[0].data) : [];
 
-  const validateJSON = function (json: any): {
-    valid: boolean;
-    message: string;
-  } {
-    if (!Array.isArray(json)) {
-      return { valid: false, message: "JSON must be an array" };
+  const handleParsedData = function (parsedData: Record<string, unknown>[]) {
+    const { coreSchema, extraSchema } = extractSchema(parsedData);
+    const normalizedData = normalizeData(parsedData, coreSchema);
+    const isInconsistent = hasInconsistentSchema(parsedData, coreSchema);
+
+    if (isInconsistent) {
+      alert("Some rows had missing or extra fields. Data was normalized.");
     }
 
-    if (json.length === 0) {
-      return { valid: false, message: "JSON file is empty" };
-    }
-
-    if (typeof json[0] !== "object" || json[0] == null) {
-      return { valid: false, message: "JSON must contain objects" };
-    }
-
-    return { valid: true, message: "JSON file is valid" };
+    setTableData(normalizedData);
   };
 
-  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const parsedJSON = JSON.parse(reader.result as string);
-        const { valid, message } = validateJSON(parsedJSON);
-
-        const { coreSchema, extraSchema } = extractSchema(parsedJSON);
-        const normalizedData = normalizeData(parsedJSON, coreSchema);
-        const isInconsistent = hasInconsistentSchema(parsedJSON, coreSchema);
-
-        if (isInconsistent) {
-          alert("Some rows had missing or extra fields. Data was normalized.");
-        }
-
-        if (!valid) {
-          alert(message);
-          return;
-        }
-        setTableData(normalizedData);
-      } catch (error) {}
-    };
-
-    reader.readAsText(file);
-  };
-
-  const handleSort = function (column: string, direction: "asc" | "desc") {
+  const handleSort = function (column: string, direction: SortOrder) {
     setSortColumn(column);
     setSortDirection(direction);
 
@@ -98,62 +63,14 @@ function App() {
 
   return (
     <>
-      <input type="file" onChange={onFileChange} />
-      <Table bordered responsive>
-        <thead>
-          <tr>
-            {tableData.length != 0 && <th>#</th>}
-            {columns.map((col) => (
-              <th key={col}>
-                <div className="th-content">
-                  <span>{col} </span>
-                  <div className="sort-icons">
-                    <span
-                      onClick={() => handleSort(col, "asc")}
-                      className={
-                        sortColumn === col && sortDirection === "asc"
-                          ? "sort-icon active"
-                          : "sort-icon"
-                      }
-                    >
-                      <FaCaretUp />
-                    </span>
-
-                    <span
-                      onClick={() => handleSort(col, "desc")}
-                      className={
-                        sortColumn === col && sortDirection === "desc"
-                          ? "sort-icon active"
-                          : "sort-icon"
-                      }
-                    >
-                      <FaCaretDown />
-                    </span>
-                  </div>
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.map((row, idx) => (
-            <tr
-              key={idx}
-              className={row.missingCols.size > 0 ? "table-warning" : ""}
-            >
-              <td>{idx + 1}</td>
-              {columns.map((col) => (
-                <td
-                  key={col}
-                  className={row.missingCols.has(col) ? "empty-cell" : ""}
-                >
-                  {String(row.data[col])}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <FileUpload onDataParsed={handleParsedData} />
+      <DataTable
+        rows={tableData}
+        columns={columns}
+        sortColumn={sortColumn}
+        sortDirection={sortDirection}
+        onSort={handleSort}
+      />
     </>
   );
 }
