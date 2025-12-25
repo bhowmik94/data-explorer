@@ -17,6 +17,9 @@ function App() {
   // Derived columns array from the uploaded JSON table data
   const columns = tableData.length > 0 ? Object.keys(tableData[0].data) : [];
 
+  const [tableQuery, setTableQuery] = useState<string>('');
+
+
   const handleParsedData = function (parsedData: Record<string, unknown>[]) {
     const { coreSchema, extraSchema } = extractSchema(parsedData);
     const normalizedData = normalizeData(parsedData, coreSchema);
@@ -68,18 +71,25 @@ function App() {
     setTableData(sorted);
   };
 
+  const handleTableSearch = function(query: string) {
+    console.log(query);
+  }
+
   return (
     <>
       <div className="container">
         <FileUpload onDataParsed={handleParsedData} />
         <hr />
-        <DataTable
-          rows={tableData}
-          columns={columns}
-          sortColumn={sortColumn}
-          sortDirection={sortDirection}
-          onSort={handleSort}
-        />
+        {tableData.length > 0 && (
+          <DataTable
+            rows={tableData}
+            columns={columns}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            onSort={handleSort}
+            onSearch={handleTableSearch}
+          />
+        )}
       </div>
     </>
   );

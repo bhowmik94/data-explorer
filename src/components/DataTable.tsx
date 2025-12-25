@@ -4,6 +4,7 @@ import type { SortOrder, tableSort } from "../dtos/dashboard";
 import { FaCaretUp, FaCaretDown } from "react-icons/fa6";
 import { useState } from "react";
 import TablePagination from "./Pagination";
+import TableSearch from "./TableSearch";
 
 type DataTableProps = {
   rows: NormalizedRow[];
@@ -11,6 +12,7 @@ type DataTableProps = {
   sortColumn: tableSort["column"];
   sortDirection: tableSort["order"];
   onSort: (column: string, direction: SortOrder) => void;
+  onSearch: (query: string) => void;
 };
 
 export default function DataTable({
@@ -19,6 +21,7 @@ export default function DataTable({
   sortColumn,
   sortDirection,
   onSort,
+  onSearch,
 }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -31,10 +34,11 @@ export default function DataTable({
 
   return (
     <>
+      <TableSearch onSearch={onSearch} />
       <Table responsive>
         <thead>
           <tr>
-            {rows.length != 0 && <th>#</th>}
+            <th>#</th>
             {columns &&
               columns.map((col) => (
                 <th key={col}>
@@ -94,13 +98,12 @@ export default function DataTable({
           ))}
         </tbody>
       </Table>
-      {rows.length != 0 && (
-        <TablePagination 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      )}
+
+      <TablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </>
   );
 }
