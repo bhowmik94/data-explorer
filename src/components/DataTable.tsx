@@ -31,7 +31,7 @@ export default function DataTable({
 
   return (
     <>
-      <Table bordered responsive>
+      <Table responsive>
         <thead>
           <tr>
             {rows.length != 0 && <th>#</th>}

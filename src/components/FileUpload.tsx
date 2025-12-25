@@ -1,6 +1,7 @@
 import type { ChangeEvent } from "react";
 import { validateJSON } from "../utils/validation";
 import Papa from "papaparse";
+import Form from "react-bootstrap/Form";
 
 type FileUploadProps = {
   onDataParsed: (data: Record<string, unknown>[]) => void;
@@ -61,5 +62,10 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
     }
   };
 
-  return <input type="file" onChange={onFileChange} />;
+  return (
+    <Form.Group controlId="formFile" className="mb-3">
+      <Form.Label><h4><b>Upload a CSV or JSON file to explore!</b></h4></Form.Label>
+      <Form.Control onChange={onFileChange} type="file" />
+    </Form.Group>
+  );
 }

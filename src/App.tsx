@@ -70,14 +70,17 @@ function App() {
 
   return (
     <>
-      <FileUpload onDataParsed={handleParsedData} />
-      <DataTable
-        rows={tableData}
-        columns={columns}
-        sortColumn={sortColumn}
-        sortDirection={sortDirection}
-        onSort={handleSort}
-      />
+      <div className="container">
+        <FileUpload onDataParsed={handleParsedData} />
+        <hr />
+        <DataTable
+          rows={tableData}
+          columns={columns}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          onSort={handleSort}
+        />
+      </div>
     </>
   );
 }
