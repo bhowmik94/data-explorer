@@ -34,7 +34,6 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
       skipEmptyLines: true,
       complete: (results) => {
         const parsedData = results.data as Record<string, unknown>[];
-        console.log("Parsed CSV Data:", parsedData);
         onDataParsed(parsedData);
       },
       error: (error) => {

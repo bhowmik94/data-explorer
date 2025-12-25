@@ -22,7 +22,7 @@ export default function DataTable({
   onSort,
 }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useState(10);
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = pageSize * currentPage;
@@ -68,7 +68,10 @@ export default function DataTable({
                     <span>{col} </span>
                     <div className="sort-icons">
                       <span
-                        onClick={() => onSort(col, "asc")}
+                        onClick={() => {
+                          onSort(col, "asc");
+                          setCurrentPage(1);
+                        }}
                         className={
                           sortColumn === col && sortDirection === "asc"
                             ? "sort-icon active"
@@ -79,7 +82,10 @@ export default function DataTable({
                       </span>
 
                       <span
-                        onClick={() => onSort(col, "desc")}
+                        onClick={() => {
+                          onSort(col, "desc");
+                          setCurrentPage(1);
+                        }}
                         className={
                           sortColumn === col && sortDirection === "desc"
                             ? "sort-icon active"
@@ -114,58 +120,60 @@ export default function DataTable({
           ))}
         </tbody>
       </Table>
-      <Pagination className="justify-content-center mt-3">
-        <Pagination.First
-          disabled={currentPage === 1}
-          onClick={() => handlePagination("first")}
-        />
-        <Pagination.Prev
-          disabled={currentPage === 1}
-          onClick={() => handlePagination("prev")}
-        />
+      {rows.length != 0 && (
+        <Pagination className="justify-content-center mt-3">
+          <Pagination.First
+            disabled={currentPage === 1}
+            onClick={() => handlePagination("first")}
+          />
+          <Pagination.Prev
+            disabled={currentPage === 1}
+            onClick={() => handlePagination("prev")}
+          />
 
-        <Pagination.Item
-          active={currentPage === 1}
-          onClick={() => setCurrentPage(1)}
-        >
-          1
-        </Pagination.Item>
-
-        {start > 2 && <Pagination.Ellipsis disabled />}
-
-        {Array.from({ length: end - start + 1 }, (_, i) => {
-          const page = start + i;
-          return (
-            <Pagination.Item
-              key={page}
-              active={page === currentPage}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </Pagination.Item>
-          );
-        })}
-
-        {end < totalPages - 1 && <Pagination.Ellipsis disabled />}
-
-        {totalPages > 1 && (
           <Pagination.Item
-            active={currentPage === totalPages}
-            onClick={() => setCurrentPage(totalPages)}
+            active={currentPage === 1}
+            onClick={() => setCurrentPage(1)}
           >
-            {totalPages}
+            1
           </Pagination.Item>
-        )}
 
-        <Pagination.Next
-          disabled={currentPage === totalPages}
-          onClick={() => handlePagination("next")}
-        />
-        <Pagination.Last
-          disabled={currentPage === totalPages}
-          onClick={() => handlePagination("last")}
-        />
-      </Pagination>
+          {start > 2 && <Pagination.Ellipsis disabled />}
+
+          {Array.from({ length: end - start + 1 }, (_, i) => {
+            const page = start + i;
+            return (
+              <Pagination.Item
+                key={page}
+                active={page === currentPage}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </Pagination.Item>
+            );
+          })}
+
+          {end < totalPages - 1 && <Pagination.Ellipsis disabled />}
+
+          {totalPages > 1 && (
+            <Pagination.Item
+              active={currentPage === totalPages}
+              onClick={() => setCurrentPage(totalPages)}
+            >
+              {totalPages}
+            </Pagination.Item>
+          )}
+
+          <Pagination.Next
+            disabled={currentPage === totalPages}
+            onClick={() => handlePagination("next")}
+          />
+          <Pagination.Last
+            disabled={currentPage === totalPages}
+            onClick={() => handlePagination("last")}
+          />
+        </Pagination>
+      )}
     </>
   );
 }

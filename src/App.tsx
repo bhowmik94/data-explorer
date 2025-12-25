@@ -55,7 +55,10 @@ function App() {
       if (typeof aValue === "number" && typeof bValue === "number") {
         result = aValue - bValue;
       } else {
-        result = String(aValue).localeCompare(String(bValue));
+        result = String(aValue).localeCompare(String(bValue), undefined, {
+          numeric: true,
+          sensitivity: "base",
+        });
       }
 
       // Apply the modifier to flip the result if descending
