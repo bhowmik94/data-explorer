@@ -7,14 +7,12 @@ interface TableSearchProps {
   onSearch: (query: string) => void;
 }
 
-export default function TableSearch( {onSearch}: TableSearchProps ) {
+export default function TableSearch({ onSearch }: TableSearchProps) {
   const [searchText, setSearchText] = useState("");
   const [searchQuery] = useDebounce(searchText, 300);
 
   useEffect(() => {
-    if (searchQuery) {
-      onSearch(searchQuery);
-    }
+    onSearch(searchQuery);
   }, [searchQuery]);
 
   return (

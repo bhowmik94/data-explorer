@@ -56,3 +56,17 @@ export const hasInconsistentSchema = function (
     return Object.keys(row).length !== columns.length;
   });
 };
+
+// match global filter search query with table row objects
+export const tableGlobalSearch = function (
+  obj: Record<string, unknown>,
+  query: string
+) {
+  // if (!query) return true;
+
+  const lowerQuery = query.toLocaleLowerCase();
+
+  return Object.values(obj).some(
+    (val) => val != null && val.toString().toLowerCase().includes(lowerQuery)
+  );
+};

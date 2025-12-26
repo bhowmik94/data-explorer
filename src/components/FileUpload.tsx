@@ -1,4 +1,4 @@
-import type { ChangeEvent } from "react";
+import { useRef, type ChangeEvent } from "react";
 import { validateJSON } from "../utils/validation";
 import Papa from "papaparse";
 import Form from "react-bootstrap/Form";
@@ -8,9 +8,11 @@ type FileUploadProps = {
 };
 
 export default function FileUpload({ onDataParsed }: FileUploadProps) {
-  const reader = new FileReader();
+  const readerRef = useRef(new FileReader());
 
   const handleJSON = function (file: File) {
+    const reader = readerRef.current;
+
     reader.onload = () => {
       try {
         const parsedJSON = JSON.parse(reader.result as string);

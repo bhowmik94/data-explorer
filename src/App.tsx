@@ -4,6 +4,7 @@ import {
   extractSchema,
   normalizeData,
   hasInconsistentSchema,
+  tableGlobalSearch,
 } from "./utils/dataUtils";
 import type { NormalizedRow } from "./dtos/utils";
 import type { tableSort, SortOrder } from "./dtos/dashboard";
@@ -11,14 +12,12 @@ import FileUpload from "./components/FileUpload";
 import DataTable from "./components/DataTable";
 
 function App() {
+  const [baseTableData, setBaseTableData] = useState<NormalizedRow[]>([]);
   const [tableData, setTableData] = useState<NormalizedRow[]>([]);
   const [sortColumn, setSortColumn] = useState<tableSort["column"]>(null);
   const [sortDirection, setSortDirection] = useState<tableSort["order"]>("asc");
   // Derived columns array from the uploaded JSON table data
   const columns = tableData.length > 0 ? Object.keys(tableData[0].data) : [];
-
-  const [tableQuery, setTableQuery] = useState<string>('');
-
 
   const handleParsedData = function (parsedData: Record<string, unknown>[]) {
     const { coreSchema, extraSchema } = extractSchema(parsedData);
@@ -30,7 +29,7 @@ function App() {
     }
 
     setTableData(normalizedData);
-
+    setBaseTableData(normalizedData);
     // Going back to initial state
     setSortColumn(null);
     setSortDirection("asc");
@@ -71,9 +70,14 @@ function App() {
     setTableData(sorted);
   };
 
-  const handleTableSearch = function(query: string) {
-    console.log(query);
-  }
+  const handleTableSearch = function (query: string) {
+    const filteredData = baseTableData.filter((item) =>
+      tableGlobalSearch(item.data, query)
+    );
+    
+    console.log(query)
+    setTableData(filteredData);
+  };
 
   return (
     <>

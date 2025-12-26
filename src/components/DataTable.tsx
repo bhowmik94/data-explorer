@@ -34,7 +34,12 @@ export default function DataTable({
 
   return (
     <>
-      <TableSearch onSearch={onSearch} />
+      <TableSearch
+        onSearch={() => {
+          onSearch;
+          setCurrentPage(1);
+        }}
+      />
       <Table responsive>
         <thead>
           <tr>
