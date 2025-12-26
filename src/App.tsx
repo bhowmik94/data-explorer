@@ -10,6 +10,8 @@ import type { NormalizedRow } from "./dtos/utils";
 import type { tableSort, SortOrder } from "./dtos/dashboard";
 import FileUpload from "./components/FileUpload";
 import DataTable from "./components/DataTable";
+import { groupByRoomType } from "./utils/chartHelpers";
+import { DatBarChart } from "./components/BarChart";
 
 function App() {
   const [baseTableData, setBaseTableData] = useState<NormalizedRow[]>([]);
@@ -74,27 +76,38 @@ function App() {
     const filteredData = baseTableData.filter((item) =>
       tableGlobalSearch(item.data, query)
     );
-    
+
     setTableData(filteredData);
 
-    // initializing sort values
+    // Going back to initial state
     setSortColumn(null);
   };
 
+  // Total count by different room type
+  const roomTypeData = groupByRoomType(tableData);
   return (
     <>
       <div className="container">
         <FileUpload onDataParsed={handleParsedData} />
         <hr />
         {tableData.length > 0 && (
-          <DataTable
-            rows={tableData}
-            columns={columns}
-            sortColumn={sortColumn}
-            sortDirection={sortDirection}
-            onSort={handleSort}
-            onSearch={handleTableSearch}
-          />
+          <>
+            <DataTable
+              rows={tableData}
+              columns={columns}
+              sortColumn={sortColumn}
+              sortDirection={sortDirection}
+              onSort={handleSort}
+              onSearch={handleTableSearch}
+            />
+
+            <DatBarChart 
+              data={roomTypeData}
+              xAxisKey='name'
+              barKey='count'
+              color='#8884d8'
+            />
+          </>
         )}
       </div>
     </>
