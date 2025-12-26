@@ -1,7 +1,8 @@
-import { Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import { FiSearch } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { RxCross1 } from "react-icons/rx";
 
 interface TableSearchProps {
   onSearch: (query: string) => void;
@@ -24,9 +25,27 @@ export default function TableSearch({ onSearch }: TableSearchProps) {
         <Form.Control
           onChange={(e) => setSearchText(e.target.value)}
           placeholder="Search Table"
+          value={searchText}
           type="text"
           aria-describedby="search-icon"
         />
+        {searchText && (
+          <Button
+            variant="outline-secondary"
+            id="clear-search"
+            onClick={() => {
+              setSearchText("");
+              onSearch("");
+            }}
+            style={{
+              borderLeft: "none", // Merges visually with the input
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <RxCross1 size={18} />
+          </Button>
+        )}
       </InputGroup>
     </Form.Group>
   );

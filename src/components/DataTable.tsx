@@ -32,14 +32,16 @@ export default function DataTable({
   const currentRows = rows.slice(startIndex, endIndex);
   const totalPages = Math.ceil(rows.length / pageSize);
 
+  const handleSearch = (searchTerm: string) => {
+    onSearch(searchTerm);
+    setCurrentPage(1); // Reset to the first page
+  };
+
   return (
     <>
-      <TableSearch
-        onSearch={() => {
-          onSearch;
-          setCurrentPage(1);
-        }}
-      />
+      <div className="d-flex justify-content-end">
+        <TableSearch onSearch={handleSearch} />
+      </div>
       <Table responsive>
         <thead>
           <tr>

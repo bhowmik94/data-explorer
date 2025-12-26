@@ -75,8 +75,10 @@ function App() {
       tableGlobalSearch(item.data, query)
     );
     
-    console.log(query)
     setTableData(filteredData);
+
+    // initializing sort values
+    setSortColumn(null);
   };
 
   return (
