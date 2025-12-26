@@ -17,7 +17,6 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
       try {
         const parsedJSON = JSON.parse(reader.result as string);
         const { valid, message } = validateJSON(parsedJSON);
-        console.log(parsedJSON);
         if (!valid) {
           alert(message);
           return;

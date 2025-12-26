@@ -15,7 +15,7 @@ type BarChartProps = {
   color: string;
 };
 
-export const DatBarChart = function ({ data, xAxisKey, barKey, color }: BarChartProps) {
+export const DataBarChart = function ({ data, xAxisKey, barKey, color }: BarChartProps) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>

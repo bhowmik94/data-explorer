@@ -1,116 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import {
-  extractSchema,
-  normalizeData,
-  hasInconsistentSchema,
-  tableGlobalSearch,
-} from "./utils/dataUtils";
+import { extractSchema, normalizeData, hasInconsistentSchema, tableGlobalSearch } from "./utils/dataUtils";
 import type { NormalizedRow } from "./dtos/utils";
 import type { tableSort, SortOrder } from "./dtos/dashboard";
 import FileUpload from "./components/FileUpload";
 import DataTable from "./components/DataTable";
 import { groupByRoomType } from "./utils/chartHelpers";
-import { DatBarChart } from "./components/BarChart";
+import { DataBarChart } from "./components/BarChart";
+
+import Papa from "papaparse"; // Recommended for CSV parsing
+import { Dashboard } from "./components/Dashboard";
 
 function App() {
-  const [baseTableData, setBaseTableData] = useState<NormalizedRow[]>([]);
-  const [tableData, setTableData] = useState<NormalizedRow[]>([]);
-  const [sortColumn, setSortColumn] = useState<tableSort["column"]>(null);
-  const [sortDirection, setSortDirection] = useState<tableSort["order"]>("asc");
-  // Derived columns array from the uploaded JSON table data
-  const columns = tableData.length > 0 ? Object.keys(tableData[0].data) : [];
+  const [rawNormalizedData, setRawNormalizedData] = useState<NormalizedRow[]>([]);
 
-  const handleParsedData = function (parsedData: Record<string, unknown>[]) {
-    const { coreSchema, extraSchema } = extractSchema(parsedData);
-    const normalizedData = normalizeData(parsedData, coreSchema);
-    const isInconsistent = hasInconsistentSchema(parsedData, coreSchema);
+  // 1. Preload Logic
+  useEffect(() => {
+    const preloadData = async () => {
+      try {
+        const response = await fetch("/data/listings.csv");
+        const csvText = await response.text();
 
-    if (isInconsistent) {
-      alert("Some rows had missing or extra fields. Data was normalized.");
-    }
-
-    setTableData(normalizedData);
-    setBaseTableData(normalizedData);
-    // Going back to initial state
-    setSortColumn(null);
-    setSortDirection("asc");
-  };
-
-  const handleSort = function (column: string, direction: SortOrder) {
-    setSortColumn(column);
-    setSortDirection(direction);
-
-    const sorted = [...tableData].sort((a, b) => {
-      const aMissing = a.missingCols.has(column);
-      const bMissing = b.missingCols.has(column);
-
-      if (aMissing && !bMissing) return 1;
-      if (!aMissing && bMissing) return -1;
-      if (aMissing && bMissing) return 0;
-
-      const aValue = a.data[column];
-      const bValue = b.data[column];
-
-      // Determine direction multiplier: 1 for asc, -1 for desc
-      const modifier = direction === "asc" ? 1 : -1;
-
-      let result = 0;
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        result = aValue - bValue;
-      } else {
-        result = String(aValue).localeCompare(String(bValue), undefined, {
-          numeric: true,
-          sensitivity: "base",
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            // Use your existing processing logic
+            processAndSetData(results.data);
+          },
         });
+      } catch (error) {
+        console.error("Failed to preload data", error);
       }
+    };
+    preloadData();
+  }, []);
 
-      // Apply the modifier to flip the result if descending
-      return result * modifier;
-    });
-
-    setTableData(sorted);
+  // Shared processing logic for both Preload and Upload
+  const processAndSetData = (parsedData: any[]) => {
+    const { coreSchema } = extractSchema(parsedData);
+    const normalized = normalizeData(parsedData, coreSchema);
+    setRawNormalizedData(normalized);
   };
 
-  const handleTableSearch = function (query: string) {
-    const filteredData = baseTableData.filter((item) =>
-      tableGlobalSearch(item.data, query)
-    );
-
-    setTableData(filteredData);
-
-    // Going back to initial state
-    setSortColumn(null);
-  };
-
-  // Total count by different room type
-  const roomTypeData = groupByRoomType(tableData);
   return (
-    <>
-      <div className="container">
-        <FileUpload onDataParsed={handleParsedData} />
-        <hr />
-        {tableData.length > 0 && (
-          <>
-            <DataTable
-              rows={tableData}
-              columns={columns}
-              sortColumn={sortColumn}
-              sortDirection={sortDirection}
-              onSort={handleSort}
-              onSearch={handleTableSearch}
-            />
+    <div className="app-container">
+      <nav className="top-nav">
+        <h2>Data Analyzer</h2>
+        {/* Upload is now separate and just feeds the same setter */}
+        <FileUpload onDataParsed={processAndSetData} />
+      </nav>
 
-            <DatBarChart 
-              data={roomTypeData}
-              xAxisKey='name'
-              barKey='count'
-              color='#8884d8'
-            />
-          </>
+      <main className="main-content">
+        {rawNormalizedData.length > 0 ? (
+          <Dashboard data={rawNormalizedData} />
+        ) : (
+          <div className="loader">Loading initial data...</div>
         )}
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
 
