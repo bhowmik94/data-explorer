@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { extractSchema, normalizeData, hasInconsistentSchema, tableGlobalSearch } from "./utils/dataUtils";
+import { extractSchema, normalizeData } from "./utils/dataUtils";
 import type { NormalizedRow } from "./dtos/utils";
-import type { tableSort, SortOrder } from "./dtos/dashboard";
 import FileUpload from "./components/FileUpload";
-import DataTable from "./components/DataTable";
-import { groupByRoomType } from "./utils/chartHelpers";
-import { DataBarChart } from "./components/BarChart";
 
-import Papa from "papaparse"; // Recommended for CSV parsing
+import Papa from "papaparse";
 import { Dashboard } from "./components/Dashboard";
 
 function App() {
@@ -25,7 +21,6 @@ function App() {
           header: true,
           skipEmptyLines: true,
           complete: (results) => {
-            // Use your existing processing logic
             processAndSetData(results.data);
           },
         });
@@ -47,7 +42,6 @@ function App() {
     <div className="app-container">
       <nav className="top-nav">
         <h2>Data Analyzer</h2>
-        {/* Upload is now separate and just feeds the same setter */}
         <FileUpload onDataParsed={processAndSetData} />
       </nav>
 
