@@ -15,10 +15,10 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
   console.log(displayData);
   const columns = displayData.length > 0 ? Object.keys(displayData[0].data) : [];
   const roomTypeData = groupByRoomType(displayData);
-  console.log(showTable);
+
   return (
     <div className="dashboard-grid">
-      <section>
+      <section className="section-styles">
         <div className="d-flex gap-2">
           <Form>
             <Form.Check
@@ -42,24 +42,30 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
       </section>
 
       {showTable && (
-        <section className="table-area p-4 border">
-          <DataTable
-            rows={displayData}
-            columns={columns}
-            sortColumn={sortConfig.column}
-            sortDirection={sortConfig.order}
-            onSort={handleSort}
-            onSearch={handleSearch}
-          />
-        </section>
+        <>
+          <h2>Data Table</h2>
+          <section className="section-styles table-area p-4 border">
+            <DataTable
+              rows={displayData}
+              columns={columns}
+              sortColumn={sortConfig.column}
+              sortDirection={sortConfig.order}
+              onSort={handleSort}
+              onSearch={handleSearch}
+            />
+          </section>
+        </>
       )}
 
       {showChart && (
-        <section className="viz-area">
-          <ChartCard title="Room Type Analysis">
-            <DataBarChart data={roomTypeData} xAxisKey="name" barKey="count" color={"#8884d8"} />
-          </ChartCard>
-        </section>
+        <>
+          <h2>Chart</h2>
+          <section className="section-styles viz-area">
+            <ChartCard title="Room Type Analysis">
+              <DataBarChart data={roomTypeData} xAxisKey="name" barKey="count" color={"#8884d8"} />
+            </ChartCard>
+          </section>
+        </>
       )}
     </div>
   );

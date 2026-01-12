@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.section-styles {
+  margin-bottom: 0.5rem;
+}
+
 .th-content {
   display: inline-flex;
   place-items: center;

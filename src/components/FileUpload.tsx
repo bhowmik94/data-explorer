@@ -64,7 +64,7 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
   };
 
   return (
-    <Form.Group controlId="formFile" className="mb-3">
+    <Form.Group controlId="formFile" className="mb-2">
       <Form.Label><h4><b>Upload a CSV or JSON file to explore!</b></h4></Form.Label>
       <Form.Control onChange={onFileChange} type="file" />
     </Form.Group>
