@@ -2,6 +2,7 @@ import { useRef, type ChangeEvent } from "react";
 import { validateJSON } from "../utils/validation";
 import Papa from "papaparse";
 import Form from "react-bootstrap/Form";
+import { Container } from "react-bootstrap";
 
 type FileUploadProps = {
   onDataParsed: (data: Record<string, unknown>[]) => void;
@@ -52,10 +53,8 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
     const fileName = file.name.toLowerCase();
     const fileType = file.type;
 
-    if (fileType === "application/json" || fileName.endsWith(".json"))
-      handleJSON(file);
-    else if (fileType === "text/csv" || fileName.endsWith(".csv"))
-      handleCSV(file);
+    if (fileType === "application/json" || fileName.endsWith(".json")) handleJSON(file);
+    else if (fileType === "text/csv" || fileName.endsWith(".csv")) handleCSV(file);
     else {
       alert("Unsupported file type! Please upload a JSON or CSV file.");
       // Clear the input
@@ -64,9 +63,13 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
   };
 
   return (
-    <Form.Group controlId="formFile" className="mb-2">
-      <Form.Label><h4><b>Upload a CSV or JSON file to explore!</b></h4></Form.Label>
-      <Form.Control onChange={onFileChange} type="file" />
-    </Form.Group>
+    <Container className="d-flex flex-column flex-md-row align-items-md-center px-4 py-5 gap-2 gap-md-3 my-2 bg-light border">
+      <Form.Label className="mb-0 text-start" style={{ flexBasis: '70%' }}>
+        <h4 className="mb-0">
+          <b>Upload a CSV or JSON file to explore!</b>
+        </h4>
+      </Form.Label>
+      <Form.Control onChange={onFileChange} type="file"  style={{ flexBasis: '30%' }} />
+    </Container>
   );
 }

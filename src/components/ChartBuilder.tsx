@@ -21,7 +21,7 @@ export const ChartBuilder = ({ columns, onBuild }: ChartBuilderProps) => {
     onBuild(formData);
   };
   return (
-    <div className="chart-builder p-3 border shadow">
+    <div className="chart-builder p-3 border">
       <h5 className="mb-3">Chart Settings</h5>
 
       <Row className="g-3 align-items-end">
