@@ -6,6 +6,7 @@ import FileUpload from "./components/FileUpload";
 
 import Papa from "papaparse";
 import { Dashboard } from "./components/Dashboard";
+import { Header } from "./layout/header";
 
 function App() {
   const [rawNormalizedData, setRawNormalizedData] = useState<NormalizedRow[]>([]);
@@ -39,20 +40,19 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <nav className="top-nav">
-        <h2>Data Analyzer</h2>
+    <>
+      <Header />
+      <div className="app-container">
         <FileUpload onDataParsed={processAndSetData} />
-      </nav>
-
-      <main className="main-content">
-        {rawNormalizedData.length > 0 ? (
-          <Dashboard data={rawNormalizedData} />
-        ) : (
-          <div className="loader">Loading initial data...</div>
-        )}
-      </main>
-    </div>
+        <main className="main-content">
+          {rawNormalizedData.length > 0 ? (
+            <Dashboard data={rawNormalizedData} />
+          ) : (
+            <div className="loader">Loading initial data...</div>
+          )}
+        </main>
+      </div>
+    </>
   );
 }
 

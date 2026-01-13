@@ -20,6 +20,9 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
   const [showChart, setShowChart] = useState<boolean>(false);
   const [chartState, setChartState] = useState<ChartState>({ data: [], config: INITIAL_CHART_CONFIG });
 
+
+  // FIXME: Remove the use of useEffect and useState in one place.
+
   // Reset state whenever the 'data' array changes
   useEffect(() => {
     setShowTable(true);
@@ -59,7 +62,7 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
               id="chart-switch"
               label={showChart ? "Hide Chart" : "Show Chart"}
               checked={showChart}
-              disabled={!chartState.data}
+              disabled={chartState.data.length == 0}
               onChange={() => setShowChart((prev) => !prev)}
             />
           </Form>
