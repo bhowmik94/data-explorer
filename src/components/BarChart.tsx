@@ -10,7 +10,7 @@ import type { BarChartData } from "../types/charts";
 
 type BarChartProps = {
   data: BarChartData[];
-  metric: string | undefined;
+  metric: string;
   xAxisKey: string;
   barKey: string;
   color: string;

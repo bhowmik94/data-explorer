@@ -12,7 +12,7 @@ import { INITIAL_CHART_CONFIG } from "../constants/chartDefaults";
 
 interface ChartState {
   data: BarChartData[];
-  config: ChartConfig | null;
+  config: ChartConfig;
 }
 
 export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
@@ -85,10 +85,10 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
         <>
           <h2>Chart</h2>
           <section className="section-styles viz-area">
-            <ChartCard title="Room Type Analysis">
+            <ChartCard title={chartState.config.groupBy + ' analysis'}>
               <DataBarChart
                 data={chartState.data}
-                metric={chartState.config?.metric}
+                metric={chartState.config.metric}
                 xAxisKey="columnName"
                 barKey="numericMetric"
                 color={"#8884d8"}
