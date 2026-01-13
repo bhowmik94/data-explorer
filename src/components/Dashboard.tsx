@@ -1,23 +1,39 @@
 import { useState } from "react";
 import type { NormalizedRow } from "../dtos/utils";
 import { useDataTable } from "../hooks/useDataTable";
-import { groupByRoomType } from "../utils/chartHelpers";
+import { generateBarChartData } from "../utils/chartHelpers";
 import { DataBarChart } from "./BarChart";
 import { ChartCard } from "./ChartCard";
 import DataTable from "./DataTable";
+import { ChartBuilder } from "./ChartBuilder";
 import { Form } from "react-bootstrap";
+import type { ChartConfig, BarChartData } from "../types/charts";
+import { INITIAL_CHART_CONFIG } from "../constants/chartDefaults";
+
+interface ChartState {
+  data: BarChartData[];
+  config: ChartConfig | null;
+}
 
 export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
   const [showTable, setShowTable] = useState<boolean>(true);
   const [showChart, setShowChart] = useState<boolean>(false);
+  const [chartState, setChartState] = useState<ChartState>({ data: [], config: INITIAL_CHART_CONFIG });
 
   const { displayData, handleSort, handleSearch, sortConfig } = useDataTable(data);
-  console.log(displayData);
   const columns = displayData.length > 0 ? Object.keys(displayData[0].data) : [];
-  const roomTypeData = groupByRoomType(displayData);
+
+  const handleChartBuild = (chartConfig: ChartConfig) => {
+    const data = generateBarChartData(displayData, chartConfig.groupBy);
+    setChartState({ data, config: chartConfig });
+  };
 
   return (
     <div className="dashboard-grid">
+      <section className="section-styles">
+        <ChartBuilder columns={columns} onBuild={handleChartBuild} />
+      </section>
+
       <section className="section-styles">
         <div className="d-flex gap-2">
           <Form>
@@ -62,7 +78,13 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
           <h2>Chart</h2>
           <section className="section-styles viz-area">
             <ChartCard title="Room Type Analysis">
-              <DataBarChart data={roomTypeData} xAxisKey="name" barKey="count" color={"#8884d8"} />
+              <DataBarChart
+                data={chartState.data}
+                metric={chartState.config?.metric}
+                xAxisKey="columnName"
+                barKey="numericMetric"
+                color={"#8884d8"}
+              />
             </ChartCard>
           </section>
         </>

@@ -6,23 +6,24 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import type { ChartData } from "../dtos/dashboard";
+import type { BarChartData } from "../types/charts";
 
 type BarChartProps = {
-  data: ChartData[];
+  data: BarChartData[];
+  metric: string | undefined;
   xAxisKey: string;
   barKey: string;
   color: string;
 };
 
-export const DataBarChart = function ({ data, xAxisKey, barKey, color }: BarChartProps) {
+export const DataBarChart = function ({ data, metric, xAxisKey, barKey, color }: BarChartProps) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>
         <XAxis dataKey={xAxisKey} />
         <YAxis />
         <Tooltip />
-        <Bar dataKey={barKey} fill={color} />
+        <Bar dataKey={barKey} name={metric} fill={color} />
       </BarChart>
     </ResponsiveContainer>
   );

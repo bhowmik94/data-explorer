@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap";
 import type { NormalizedRow } from "../dtos/utils";
-import type { SortOrder, tableSort } from "../dtos/dashboard";
+import type { SortOrder, tableSort } from "../types/common";
 import { FaCaretUp, FaCaretDown } from "react-icons/fa6";
 import { useState } from "react";
 import TablePagination from "./Pagination";
