@@ -26,9 +26,9 @@ export const ChartBuilder = ({ columns, onBuild }: ChartBuilderProps) => {
 
       <Row className="g-3 align-items-end">
         {/* Group By Selection */}
-        <Col md={5}>
+        <Col md={3}>
           <Form.Group controlId="groupBySelect">
-            <Form.Label className="small">Group By</Form.Label>
+            <Form.Label className="small">Group By (Categorical)</Form.Label>
             <Form.Select name="groupBy" value={formData.groupBy} onChange={handleDropdownChange}>
               <option value="">Select column...</option>
               {columns.map((col) => (
@@ -41,7 +41,7 @@ export const ChartBuilder = ({ columns, onBuild }: ChartBuilderProps) => {
         </Col>
 
         {/* Metric Selection */}
-        <Col md={4}>
+        <Col md={3}>
           <Form.Group controlId="metricSelect">
             <Form.Label className="small">Metric</Form.Label>
             <Form.Select name="metric" value={formData.metric} onChange={handleDropdownChange}>
@@ -53,6 +53,23 @@ export const ChartBuilder = ({ columns, onBuild }: ChartBuilderProps) => {
             </Form.Select>
           </Form.Group>
         </Col>
+
+        {/* Value Column Selection */}
+        {["sum", "avg"].includes(formData.metric) && (
+          <Col md={3}>
+            <Form.Group controlId="valueColmnSelect">
+              <Form.Label className="small">Value Column (Numeric)</Form.Label>
+              <Form.Select name="valueColumn" value={formData.valueColumn} onChange={handleDropdownChange}>
+                <option value="">Select column...</option>
+                {columns.map((col) => (
+                  <option key={col} value={col}>
+                    {col}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        )}
 
         {/* Action Button */}
         <Col md={3}>

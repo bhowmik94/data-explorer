@@ -4,4 +4,5 @@ export const INITIAL_CHART_CONFIG: ChartConfig = {
   chartType: "bar",
   groupBy: "column",
   metric: "count",
+  valueColumn: "column",
 };

@@ -31,7 +31,7 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
   const columns = displayData.length > 0 ? Object.keys(displayData[0].data) : [];
 
   const handleChartBuild = (chartConfig: ChartConfig) => {
-    const data = generateBarChartData(displayData, chartConfig.groupBy);
+    const data = generateBarChartData(displayData, chartConfig.groupBy, chartConfig.metric, chartConfig.valueColumn);
     setShowChart(true);
     setChartState({ data, config: chartConfig });
   };
