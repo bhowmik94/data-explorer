@@ -59,6 +59,7 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
               id="chart-switch"
               label={showChart ? "Hide Chart" : "Show Chart"}
               checked={showChart}
+              disabled={!chartState.data}
               onChange={() => setShowChart((prev) => !prev)}
             />
           </Form>
