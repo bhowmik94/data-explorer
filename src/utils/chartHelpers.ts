@@ -6,7 +6,7 @@ export const generateBarChartData = (rows: any[], groupBy: string): BarChartData
   rows.forEach((row) => {
     const type = row.data[groupBy]?? "Unknown";
     map[type] = (map[type] || 0) + 1;
-  }); // { "A": 1, "B": 2 }
+  }); // ex: { "A": 1, "B": 2 }
 
   // Mapping the above map object to array of objects
   return Object.entries(map).map(([columnName, numericMetric]) => ({

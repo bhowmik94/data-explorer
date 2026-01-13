@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { NormalizedRow } from "../dtos/utils";
 import { useDataTable } from "../hooks/useDataTable";
 import { generateBarChartData } from "../utils/chartHelpers";
@@ -20,11 +20,19 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
   const [showChart, setShowChart] = useState<boolean>(false);
   const [chartState, setChartState] = useState<ChartState>({ data: [], config: INITIAL_CHART_CONFIG });
 
+  // Reset state whenever the 'data' array changes
+  useEffect(() => {
+    setShowTable(true);
+    setShowChart(false);
+    setChartState({ data: [], config: INITIAL_CHART_CONFIG });
+  }, [data]);
+
   const { displayData, handleSort, handleSearch, sortConfig } = useDataTable(data);
   const columns = displayData.length > 0 ? Object.keys(displayData[0].data) : [];
 
   const handleChartBuild = (chartConfig: ChartConfig) => {
     const data = generateBarChartData(displayData, chartConfig.groupBy);
+    setShowChart(true);
     setChartState({ data, config: chartConfig });
   };
 
