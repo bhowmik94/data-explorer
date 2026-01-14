@@ -5,11 +5,13 @@ import { useDebounce } from "use-debounce";
 import { RxCross1 } from "react-icons/rx";
 
 interface TableSearchProps {
+  searchText: string;
+  onSetSearchText: (text: string) => void;
   onSearch: (query: string) => void;
 }
 
-export default function TableSearch({ onSearch }: TableSearchProps) {
-  const [searchText, setSearchText] = useState("");
+export default function TableSearch({ searchText, onSetSearchText, onSearch }: TableSearchProps) {
+  // const [searchText, setSearchText] = useState("");
   const [searchQuery] = useDebounce(searchText, 300);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function TableSearch({ onSearch }: TableSearchProps) {
           <FiSearch size={18} />
         </InputGroup.Text>
         <Form.Control
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={(e) => onSetSearchText(e.target.value)}
           placeholder="Search Table"
           value={searchText}
           type="text"
@@ -34,7 +36,7 @@ export default function TableSearch({ onSearch }: TableSearchProps) {
             variant="outline-secondary"
             id="clear-search"
             onClick={() => {
-              setSearchText("");
+              onSetSearchText("");
               onSearch("");
             }}
             style={{

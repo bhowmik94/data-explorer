@@ -1,4 +1,4 @@
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import type { NormalizedRow } from "../dtos/utils";
 import type { SortOrder, tableSort } from "../types/common";
 import { FaCaretUp, FaCaretDown } from "react-icons/fa6";
@@ -13,6 +13,7 @@ type DataTableProps = {
   sortDirection: tableSort["order"];
   onSort: (column: string, direction: SortOrder) => void;
   onSearch: (query: string) => void;
+  onReset: () => void;
 };
 
 export default function DataTable({
@@ -22,9 +23,11 @@ export default function DataTable({
   sortDirection,
   onSort,
   onSearch,
+  onReset,
 }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(10); // TODO: add custom pagination page size implementation
+  const [searchText, setSearchText] = useState("");
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = pageSize * currentPage;
@@ -39,10 +42,26 @@ export default function DataTable({
 
   return (
     <>
-      <div className="d-flex justify-content-end">
-        <TableSearch onSearch={handleSearch} />
+      <div className="d-flex justify-content-between">
+        <Button
+          variant="outline-primary"
+          onClick={() => {
+            onReset();
+            setSearchText('');
+            setCurrentPage(1);
+          }}
+        >
+          Reset
+        </Button>
+        <TableSearch
+          searchText={searchText}
+          onSetSearchText={(text: string) => {
+            setSearchText(text);
+          }}
+          onSearch={handleSearch}
+        />
       </div>
-      <Table responsive>
+      <Table striped hover responsive>
         <thead>
           <tr>
             <th>#</th>
@@ -57,11 +76,7 @@ export default function DataTable({
                           onSort(col, "asc");
                           setCurrentPage(1);
                         }}
-                        className={
-                          sortColumn === col && sortDirection === "asc"
-                            ? "sort-icon active"
-                            : "sort-icon"
-                        }
+                        className={sortColumn === col && sortDirection === "asc" ? "sort-icon active" : "sort-icon"}
                       >
                         <FaCaretUp />
                       </span>
@@ -71,11 +86,7 @@ export default function DataTable({
                           onSort(col, "desc");
                           setCurrentPage(1);
                         }}
-                        className={
-                          sortColumn === col && sortDirection === "desc"
-                            ? "sort-icon active"
-                            : "sort-icon"
-                        }
+                        className={sortColumn === col && sortDirection === "desc" ? "sort-icon active" : "sort-icon"}
                       >
                         <FaCaretDown />
                       </span>
@@ -87,17 +98,11 @@ export default function DataTable({
         </thead>
         <tbody>
           {currentRows.map((row, idx) => (
-            <tr
-              key={idx}
-              className={row.missingCols.size > 0 ? "table-warning" : ""}
-            >
+            <tr key={idx} className={row.missingCols.size > 0 ? "table-warning" : ""}>
               <td>{(currentPage - 1) * pageSize + idx + 1}</td>
               {columns &&
                 columns.map((col) => (
-                  <td
-                    key={col}
-                    className={row.missingCols.has(col) ? "empty-cell" : ""}
-                  >
+                  <td key={col} className={row.missingCols.has(col) ? "empty-cell" : ""}>
                     {String(row.data[col])}
                   </td>
                 ))}
@@ -106,11 +111,7 @@ export default function DataTable({
         </tbody>
       </Table>
 
-      <TablePagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      <TablePagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </>
   );
 }

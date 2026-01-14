@@ -11,6 +11,14 @@ import { Header } from "./layout/header";
 function App() {
   const [rawNormalizedData, setRawNormalizedData] = useState<NormalizedRow[]>([]);
 
+  // Shared processing logic for both Preload and Upload
+  const processAndSetData = (parsedData: any[]) => {
+    console.log(parsedData)
+    const { coreSchema } = extractSchema(parsedData);
+    const normalized = normalizeData(parsedData, coreSchema);
+    setRawNormalizedData(normalized);
+  };
+
   // 1. Preload Logic
   useEffect(() => {
     const preloadData = async () => {
@@ -31,13 +39,6 @@ function App() {
     };
     preloadData();
   }, []);
-
-  // Shared processing logic for both Preload and Upload
-  const processAndSetData = (parsedData: any[]) => {
-    const { coreSchema } = extractSchema(parsedData);
-    const normalized = normalizeData(parsedData, coreSchema);
-    setRawNormalizedData(normalized);
-  };
 
   return (
     <>

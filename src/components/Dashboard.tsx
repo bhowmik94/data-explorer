@@ -30,7 +30,7 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
     setChartState({ data: [], config: INITIAL_CHART_CONFIG });
   }, [data]);
 
-  const { displayData, handleSort, handleSearch, sortConfig } = useDataTable(data);
+  const { displayData, handleSort, handleSearch, reset, sortConfig } = useDataTable(data);
   const columns = displayData.length > 0 ? Object.keys(displayData[0].data) : [];
 
   const handleChartBuild = (chartConfig: ChartConfig) => {
@@ -80,6 +80,7 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
               sortDirection={sortConfig.order}
               onSort={handleSort}
               onSearch={handleSearch}
+              onReset={reset}
             />
           </section>
         </>

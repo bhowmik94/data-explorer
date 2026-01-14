@@ -59,5 +59,10 @@ export const useDataTable = (initialData: NormalizedRow[]) => {
     setSortConfig({ column: null, order: "asc" });
   };
 
-  return { displayData, handleSort, handleSearch, sortConfig };
+  const reset = () => {
+    setSortConfig({ column: null, order: "asc" });
+    setDisplayData(baseData);
+  }
+
+  return { displayData, handleSort, handleSearch, reset, sortConfig };
 };

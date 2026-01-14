@@ -77,7 +77,7 @@ export const ChartBuilder = ({ columns, onBuild }: ChartBuilderProps) => {
 
         {/* Action Button */}
         <Col md={3}>
-          <Button variant="primary" className="w-100" disabled={!formData.groupBy} onClick={submitChartForm}>
+          <Button variant="outline-primary" className="w-100" disabled={!formData.groupBy} onClick={submitChartForm}>
             Generate
           </Button>
         </Col>

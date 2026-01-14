@@ -15,8 +15,8 @@ export const extractSchema = function (
     });
   });
 
-  let coreKeys: string[] = [];
-  let extraKeys: string[] = [];
+  const coreKeys: string[] = [];
+  const extraKeys: string[] = [];
 
   keyCounts.forEach((val, key) => {
     if (val < thresholdNoRows) extraKeys.push(key);
