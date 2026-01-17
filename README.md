@@ -41,7 +41,7 @@ The project focuses on usability, performance, and clean UI patterns, inspired b
 
  - This ensures the application remains flexible across different dataset schemas.
 
-# 🧠 Design Decisions
+## 🧠 Design Decisions
 
  - **Client-side data processing** for simplicity and transparency
 
@@ -51,7 +51,7 @@ The project focuses on usability, performance, and clean UI patterns, inspired b
 
  - Focus on composability and extensibility rather than over-engineering
 
-# 🛠 Technology Stack
+## 🛠 Technology Stack
 
  - **React** (with Hooks)
 
@@ -65,7 +65,7 @@ The project focuses on usability, performance, and clean UI patterns, inspired b
 
  - **Bootstrap / React-Bootstrap** for UI components
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
 ```bash
 git clone https://github.com/your-username/data-explorer.git
@@ -79,7 +79,7 @@ Then open your browser at:
 ```
 http://localhost:5173
 ```
-# 📌 Use Cases
+## 📌 Use Cases
 
  - Quick exploration of CSV datasets
 
@@ -89,7 +89,7 @@ http://localhost:5173
 
  - Frontend-focused data tooling without backend complexity
 
-# 📈 Future Improvements
+## 📈 Future Improvements
 
  - Column type inference (numeric vs categorical)
 
@@ -101,12 +101,12 @@ http://localhost:5173
 
  - Column visibility toggles
 
-# 👤 Author
+## 👤 Author
 
 Built by **Sourav Bhowmik**
 Frontend Developer with interests in data visualization, clean UI design, and scalable frontend architecture.
 
-# 📝 License
+## 📝 License
 
 MIT License
 
