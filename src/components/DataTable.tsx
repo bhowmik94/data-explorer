@@ -42,7 +42,7 @@ export default function DataTable({
 
   return (
     <>
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between align-items-center">
         <Button
           variant="outline-primary"
           onClick={() => {
