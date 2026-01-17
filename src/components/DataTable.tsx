@@ -26,7 +26,7 @@ export default function DataTable({
   onReset,
 }: DataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10); // TODO: add custom pagination page size implementation
+  const [pageSize] = useState(10); // TODO: add custom pagination page size implementation
   const [searchText, setSearchText] = useState("");
 
   const startIndex = (currentPage - 1) * pageSize;

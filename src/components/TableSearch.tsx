@@ -1,6 +1,6 @@
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { FiSearch } from "react-icons/fi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDebounce } from "use-debounce";
 import { RxCross1 } from "react-icons/rx";
 
