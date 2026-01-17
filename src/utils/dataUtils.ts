@@ -1,8 +1,9 @@
 import type { SchemaResult, NormalizedRow } from "../dtos/utils";
+import type { GenericObject } from "../types/common";
 
 // Retrieve core and extra keys from parsed data
 export const extractSchema = function (
-  data: Record<string, unknown>[]
+  data: GenericObject[]
 ): SchemaResult {
   const keyCounts = new Map<string, number>();
 
@@ -28,11 +29,11 @@ export const extractSchema = function (
 
 // Normalize each data row against the schema
 export const normalizeData = function (
-  data: Record<string, unknown>[],
+  data: GenericObject[],
   columns: string[]
 ): NormalizedRow[] {
   return data.map((row) => {
-    const normalizedRow: Record<string, unknown> = {};
+    const normalizedRow: GenericObject = {};
     const missingCols = new Set<string>();
 
     columns.forEach((col) => {
@@ -49,7 +50,7 @@ export const normalizeData = function (
 
 // Check for inconsistent rows in data
 export const hasInconsistentSchema = function (
-  data: Record<string, unknown>[],
+  data: GenericObject[],
   columns: string[]
 ): boolean {
   return data.some((row) => {
@@ -59,7 +60,7 @@ export const hasInconsistentSchema = function (
 
 // match global filter search query with table row objects
 export const tableGlobalSearch = function (
-  obj: Record<string, unknown>,
+  obj: GenericObject,
   query: string
 ) {
   // if (!query) return true;

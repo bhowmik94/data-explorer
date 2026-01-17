@@ -11,12 +11,11 @@ interface TableSearchProps {
 }
 
 export default function TableSearch({ searchText, onSetSearchText, onSearch }: TableSearchProps) {
-  // const [searchText, setSearchText] = useState("");
   const [searchQuery] = useDebounce(searchText, 300);
 
   useEffect(() => {
     onSearch(searchQuery);
-  }, [searchQuery]);
+  }, [searchQuery, onSearch]);
 
   return (
     <Form.Group controlId="formFile" className="col-sm-3 mb-3">

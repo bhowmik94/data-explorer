@@ -1,22 +1,24 @@
+import type { NormalizedRow } from "../dtos/utils";
 import type { BarChartData } from "../types/charts";
 
 export const generateBarChartData = (
-  rows: any[],
+  rows: NormalizedRow[],
   groupBy: string,
   metric: string,
-  valueColumn: string
+  valueColumn: string,
 ): BarChartData[] => {
   const map: Record<string, number> = {};
   const countMap: Record<string, number> = {}; // Helper for Average
 
   rows.forEach((row) => {
-    const column = row.data[groupBy] ?? "Unknown";
+    const column = String(row.data[groupBy] ?? "Unknown");
 
     if (metric === "count") {
       map[column] = (map[column] || 0) + 1;
     } else {
       // Both 'sum' and 'avg' need the numeric value
-      const value = +row.data[valueColumn] || 0;
+      const rawValue = row.data[valueColumn];
+      const value = typeof rawValue === "number" ? rawValue : typeof rawValue === "string" ? Number(rawValue) : 0;
       map[column] = (map[column] || 0) + value;
 
       if (metric === "avg") {

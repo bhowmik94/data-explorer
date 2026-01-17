@@ -7,16 +7,19 @@ import FileUpload from "./components/FileUpload";
 import Papa from "papaparse";
 import { Dashboard } from "./components/Dashboard";
 import { Header } from "./layout/header";
+import type { GenericObject } from "./types/common";
 
 function App() {
   const [rawNormalizedData, setRawNormalizedData] = useState<NormalizedRow[]>([]);
+  const [dataId, setDataId] = useState<number>(0); // A counter to change key of Dashboard component
 
   // Shared processing logic for both Preload and Upload
-  const processAndSetData = (parsedData: any[]) => {
+  const processAndSetData = (parsedData: GenericObject[]) => {
     console.log(parsedData)
     const { coreSchema } = extractSchema(parsedData);
     const normalized = normalizeData(parsedData, coreSchema);
     setRawNormalizedData(normalized);
+    setDataId(prev => prev + 1);
   };
 
   // 1. Preload Logic
@@ -26,7 +29,7 @@ function App() {
         const response = await fetch("/data/Titanic-Dataset.csv");
         const csvText = await response.text();
 
-        Papa.parse(csvText, {
+        Papa.parse<GenericObject>(csvText, {
           header: true,
           skipEmptyLines: true,
           complete: (results) => {
@@ -47,7 +50,7 @@ function App() {
         <FileUpload onDataParsed={processAndSetData} />
         <main className="main-content">
           {rawNormalizedData.length > 0 ? (
-            <Dashboard data={rawNormalizedData} />
+            <Dashboard key={dataId} data={rawNormalizedData} />
           ) : (
             <div className="loader">Loading initial data...</div>
           )}

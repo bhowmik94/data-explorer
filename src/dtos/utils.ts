@@ -1,9 +1,11 @@
+import type { GenericObject } from "../types/common";
+
 export interface SchemaResult {
   coreSchema: string[];
   extraSchema: string[];
 }
 
 export interface NormalizedRow {
-  data: Record<string, unknown>;
+  data: GenericObject;
   missingCols: Set<string>;
 }

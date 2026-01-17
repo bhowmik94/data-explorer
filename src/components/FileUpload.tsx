@@ -3,9 +3,10 @@ import { validateJSON } from "../utils/validation";
 import Papa from "papaparse";
 import Form from "react-bootstrap/Form";
 import { Container } from "react-bootstrap";
+import type { GenericObject } from "../types/common";
 
 type FileUploadProps = {
-  onDataParsed: (data: Record<string, unknown>[]) => void;
+  onDataParsed: (data: GenericObject[]) => void;
 };
 
 export default function FileUpload({ onDataParsed }: FileUploadProps) {
@@ -36,7 +37,7 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
-        const parsedData = results.data as Record<string, unknown>[];
+        const parsedData = results.data as GenericObject[];
         onDataParsed(parsedData);
       },
       error: (error) => {

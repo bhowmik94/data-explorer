@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { NormalizedRow } from "../dtos/utils";
 import { useDataTable } from "../hooks/useDataTable";
 import { generateBarChartData } from "../utils/chartHelpers";
@@ -19,16 +19,6 @@ export const Dashboard = ({ data }: { data: NormalizedRow[] }) => {
   const [showTable, setShowTable] = useState<boolean>(true);
   const [showChart, setShowChart] = useState<boolean>(false);
   const [chartState, setChartState] = useState<ChartState>({ data: [], config: INITIAL_CHART_CONFIG });
-
-
-  // FIXME: Remove the use of useEffect and useState in one place.
-
-  // Reset state whenever the 'data' array changes
-  useEffect(() => {
-    setShowTable(true);
-    setShowChart(false);
-    setChartState({ data: [], config: INITIAL_CHART_CONFIG });
-  }, [data]);
 
   const { displayData, handleSort, handleSearch, reset, sortConfig } = useDataTable(data);
   const columns = displayData.length > 0 ? Object.keys(displayData[0].data) : [];

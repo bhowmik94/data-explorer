@@ -1,4 +1,4 @@
-export const validateJSON = function (json: any): {
+export const validateJSON = function (json: unknown): {
   valid: boolean;
   message: string;
 } {
