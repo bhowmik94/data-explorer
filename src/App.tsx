@@ -8,7 +8,7 @@ import Papa from "papaparse";
 import { Dashboard } from "./components/Dashboard";
 import { Header } from "./layout/header";
 import type { GenericObject } from "./types/common";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [rawNormalizedData, setRawNormalizedData] = useState<NormalizedRow[]>([]);
