@@ -8,6 +8,7 @@ import Papa from "papaparse";
 import { Dashboard } from "./components/Dashboard";
 import { Header } from "./layout/header";
 import type { GenericObject } from "./types/common";
+import { Analytics } from "@vercel/analytics/next"
 
 function App() {
   const [rawNormalizedData, setRawNormalizedData] = useState<NormalizedRow[]>([]);
@@ -46,6 +47,7 @@ function App() {
   return (
     <>
       <Header />
+      <Analytics />
       <div className="app-container">
         <FileUpload onDataParsed={processAndSetData} />
         <main className="main-content">
